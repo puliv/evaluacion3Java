@@ -13,6 +13,7 @@ public class Productos {
     private String marca, modelo;
     private double talla, precio;
 
+
     public Productos() {
     }
 
@@ -54,6 +55,8 @@ public class Productos {
     public void setModelo(String modelo) {
         this.modelo = modelo;
     }
+
+    
 
     @Override
     public String toString() {
