@@ -7,6 +7,8 @@ package view;
 import controller.Productos;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 import model.GestionProductos;
 
@@ -15,6 +17,7 @@ import model.GestionProductos;
  * @author pulie
  */
 public class Form extends javax.swing.JFrame {
+    private int filaSeleccionada = -1;
     private GestionProductos gestionProductos;
 
     /**
@@ -27,6 +30,7 @@ public class Form extends javax.swing.JFrame {
         tblDetalle.setVisible(false);
         btnEliminar.setVisible(false);
         btnEditar.setVisible(false);
+        btnGuardarEdicion.setVisible(false);
         
         //Funcion que muestra boton eliminar al tocar una columna de la tabla de detalle
         tblDetalle.addMouseListener(new MouseAdapter() {
@@ -64,7 +68,7 @@ public class Form extends javax.swing.JFrame {
         idCliente = new javax.swing.JTextField();
         nombreCliente = new javax.swing.JTextField();
         metodoPago = new javax.swing.JTextField();
-        guardarBtn = new javax.swing.JButton();
+        btnAgregar = new javax.swing.JButton();
         btnDetalle = new javax.swing.JButton();
         lblDetalle = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -82,6 +86,7 @@ public class Form extends javax.swing.JFrame {
         lblTotalPago = new javax.swing.JLabel();
         btnEliminar = new javax.swing.JButton();
         btnEditar = new javax.swing.JButton();
+        btnGuardarEdicion = new javax.swing.JButton();
 
         javax.swing.GroupLayout jDialog1Layout = new javax.swing.GroupLayout(jDialog1.getContentPane());
         jDialog1.getContentPane().setLayout(jDialog1Layout);
@@ -117,10 +122,10 @@ public class Form extends javax.swing.JFrame {
 
         jLabel8.setText("Metodo de Pago");
 
-        guardarBtn.setText("Agregar Zapatillas");
-        guardarBtn.addActionListener(new java.awt.event.ActionListener() {
+        btnAgregar.setText("Agregar Zapatillas");
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                guardarBtnActionPerformed(evt);
+                btnAgregarActionPerformed(evt);
             }
         });
 
@@ -182,6 +187,18 @@ public class Form extends javax.swing.JFrame {
         });
 
         btnEditar.setText("Editar");
+        btnEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarActionPerformed(evt);
+            }
+        });
+
+        btnGuardarEdicion.setText("Guardar cambios");
+        btnGuardarEdicion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarEdicionActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -214,7 +231,10 @@ public class Form extends javax.swing.JFrame {
                                 .addComponent(jLabel2))
                             .addGap(56, 56, 56)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(guardarBtn)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(btnGuardarEdicion, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btnAgregar))
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(precioZap, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 289, Short.MAX_VALUE)
                                     .addComponent(marcaZap)
@@ -287,7 +307,9 @@ public class Form extends javax.swing.JFrame {
                             .addComponent(jLabel5)
                             .addComponent(precioZap, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(guardarBtn)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnAgregar)
+                            .addComponent(btnGuardarEdicion))
                         .addGap(18, 18, 18)
                         .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -303,13 +325,14 @@ public class Form extends javax.swing.JFrame {
                     .addComponent(btnEliminar)
                     .addComponent(btnEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(metodoPago, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8)
-                    .addComponent(jLabel10)
-                    .addComponent(lblTotalNeto)
-                    .addComponent(lblCliente)
-                    .addComponent(jLabel9))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel8)
+                        .addComponent(jLabel10)
+                        .addComponent(lblTotalNeto)
+                        .addComponent(lblCliente)
+                        .addComponent(jLabel9)))
                 .addGap(3, 3, 3)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel11)
@@ -328,13 +351,13 @@ public class Form extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    //Boton guardar
-    private void guardarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarBtnActionPerformed
+    //Boton para agregar item a la lista
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
         String marca = marcaZap.getText();
         String modelo = modeloZap.getText();
         double talla = Double.parseDouble(tallaZap.getText()); //conviertiendo string a double
         double precio = Double.parseDouble(precioZap.getText());
-        //System.out.println("\nmarca:" + marca + "\nmodelo:" + modelo +"\ntalla:" + talla+ "\nprecio:" + precio);
+        
         //instanciando un producto
         Productos producto = new Productos(marca, modelo, talla, precio);
         gestionProductos.agregarProducto(producto);
@@ -353,12 +376,13 @@ public class Form extends javax.swing.JFrame {
             btnDetalleActionPerformed(evt); //si ya hay items en lista se muestran altiro
         }
           
-    }//GEN-LAST:event_guardarBtnActionPerformed
+    }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void marcaZapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_marcaZapActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_marcaZapActionPerformed
 
+    
     private void btnDetalleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDetalleActionPerformed
         //construir cabecera y cuerpo de la tabla
         String[] columnas = {"Marca", "Modelo", "Talla", "Precio"};
@@ -367,7 +391,10 @@ public class Form extends javax.swing.JFrame {
         
         //rellenar los campos con los datos obtenidos
         for(Productos zap : gestionProductos.getZapatillas()){
-            Object[] fila = {zap.getMarca(), zap.getModelo(), zap.getTalla(), zap.getPrecio()};
+            DecimalFormat df = new DecimalFormat("#"); //formateo precio para que salga sin decimal
+            String marcaCase = zap.getMarca().substring(0, 1).toUpperCase() + zap.getMarca().substring(1).toLowerCase();
+            String modeloCase = zap.getModelo().substring(0, 1).toUpperCase() + zap.getModelo().substring(1).toLowerCase();
+            Object[] fila = {marcaCase, modeloCase, zap.getTalla(), "$" + df.format(zap.getPrecio())};
             modelo.addRow(fila);
         }
         
@@ -385,14 +412,72 @@ public class Form extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnAgregarClienteActionPerformed
 
-
-
-    
+    //funcion para eliminar items de la lista
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        int filaSeleccionada = tblDetalle.getSelectedRow();
+        filaSeleccionada = tblDetalle.getSelectedRow();
         gestionProductos.eliminarProducto(filaSeleccionada);
         ((DefaultTableModel)tblDetalle.getModel()).removeRow(filaSeleccionada);
+        btnEditar.setVisible(false);
+        btnEliminar.setVisible(false);
     }//GEN-LAST:event_btnEliminarActionPerformed
+
+    //funcion para acceder a item y editarlo
+    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
+        //escondiendo btn agregar y mostrando btn guardar cambios
+        btnGuardarEdicion.setVisible(true);
+        btnAgregar.setVisible(false);
+        filaSeleccionada = tblDetalle.getSelectedRow();
+        
+        //Obteniendo lista de productos
+        ArrayList<Productos> list = gestionProductos.getZapatillas();
+        //Para guardar las zapatillas seleccionadas segun el index
+        Productos itemSeleccionado = list.get(filaSeleccionada);
+        //y usar los datos para editarlos
+        String marcaDetalle = itemSeleccionado.getMarca();
+        String modeloDetalle = itemSeleccionado.getModelo();
+        double tallaDetalle = itemSeleccionado.getTalla();
+        double precioDetalle = itemSeleccionado.getPrecio();
+       
+        //mostrando datos en inputs
+        marcaZap.setText(marcaDetalle);
+        modeloZap.setText(modeloDetalle);
+        tallaZap.setText( Double.toString(tallaDetalle));
+        precioZap.setText( Double.toString(precioDetalle)); //conviertiendo double a string
+
+        //condicion para que ingrese dato numerico
+//            int talla = 0;
+//            try {
+//                talla = Integer.parseInt(tallaZap.getText());
+//            } catch (NumberFormatException e) {
+//                System.out.println("el dato debe ser numerico");
+//                return;
+//            }
+    }//GEN-LAST:event_btnEditarActionPerformed
+    
+    //funcion para guardar datos editados
+    private void btnGuardarEdicionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarEdicionActionPerformed
+        String marcaEdit = marcaZap.getText();
+        String modeloEdit = modeloZap.getText();
+        double tallaEdit = Double.parseDouble(tallaZap.getText()); //conviertiendo string a double
+        double precioEdit = Double.parseDouble(precioZap.getText());
+
+        Productos prodModificado = new Productos(marcaEdit, modeloEdit, tallaEdit, precioEdit);
+        gestionProductos.modificarProducto(filaSeleccionada, prodModificado);
+        
+        //actualizar tabla
+        tblDetalle.setValueAt(marcaEdit, filaSeleccionada, 0);
+        tblDetalle.setValueAt(modeloEdit, filaSeleccionada, 1);
+        tblDetalle.setValueAt(tallaEdit, filaSeleccionada, 2);            
+        tblDetalle.setValueAt(precioEdit, filaSeleccionada, 3);
+        //limpiar formulario
+        marcaZap.setText("");
+        modeloZap.setText("");
+        precioZap.setText("");
+        tallaZap.setText(""); 
+        //mostrar boton agregar y ocultar editar
+        btnAgregar.setVisible(true);
+        btnGuardarEdicion.setVisible(false);
+    }//GEN-LAST:event_btnGuardarEdicionActionPerformed
 
     /**
      * @param args the command line arguments
@@ -430,11 +515,12 @@ public class Form extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnAgregarCliente;
     private javax.swing.JButton btnDetalle;
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnEliminar;
-    private javax.swing.JButton guardarBtn;
+    private javax.swing.JButton btnGuardarEdicion;
     private javax.swing.JTextField idCliente;
     private javax.swing.JDialog jDialog1;
     private javax.swing.JLabel jLabel1;

@@ -27,9 +27,8 @@ public class GestionProductos {
     public void agregarProducto(Productos zap) {
         //Hay que agregar condiciones en formulario para que 
         //no permita ingresar datos incorrectos
-        System.out.println("zappppp" + zap);
         productos.add(zap);
-        System.out.println("la zapatilla modelo: " + zap.getModelo() + " marca: " + zap.getMarca() + " se agrego");
+//      System.out.println("la zapatilla modelo: " + zap.getModelo() + " marca: " + zap.getMarca() + " se agrego");
     }
     
     //mostrar lista de productos
@@ -39,6 +38,7 @@ public class GestionProductos {
         }
     }
     
+    //funcion para mostrar lista de detalle
     public int obtenerTamanio(){
         int contador = 0;
         for(Productos zap: productos){
@@ -48,21 +48,21 @@ public class GestionProductos {
     }
    
     
-    //Eliminar zapatillas de la lista de productos
+    //Eliminar zapatillas seleccionadas de la lista de productos
     public boolean eliminarProducto(int indice){
         productos.remove(indice);
-        System.out.println("curso ha sido eliminado con exito");
+        System.out.println("Producto eliminado con exito");
         return true;
     }
     
     //modificar producto de lista  
-//    public boolean modificarCurso(int indice, Curso cursoModificado){
-//        if(indice >= 0 && indice < cursos.size()){
-//            cursos.set(indice, cursoModificado);
-//            System.out.println("curso modificado en indice: " + indice);
-//            return true;
-//        }
-//        System.out.println("indice fuera de rango para modificar un curso");
-//        return false;
-//    }
+    public boolean modificarProducto(int indice, Productos prodModificado){
+        if(indice >= 0 && indice < productos.size()){
+            productos.set(indice, prodModificado);
+            System.out.println("producto modificado en indice: " + indice);
+            return true;
+        }
+        System.out.println("indice fuera de rango para modificar un curso");
+        return false;
+    }
 }
