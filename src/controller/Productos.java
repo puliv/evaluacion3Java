@@ -11,32 +11,32 @@ package controller;
 //Entidad Asociada
 public class Productos {
     private String marca, modelo;
-    private double talla, precio;
+    private int talla, precio;
 
 
     public Productos() {
     }
 
-    public Productos(String marca, String modelo, double talla, double precio) {
+    public Productos(String marca, String modelo, int talla, int precio) {
         this.marca = marca;
         this.modelo = modelo;
         this.talla = talla;
         this.precio = precio;
     }
 
-    public double getTalla() {
+    public int getTalla() {
         return talla;
     }
 
-    public void setTalla(double talla) {
+    public void setTalla(int talla) {
         this.talla = talla;
     }
 
-    public double getPrecio() {
+    public int getPrecio() {
         return precio;
     }
 
-    public void setPrecio(double precio) {
+    public void setPrecio(int precio) {
         this.precio = precio;
     }
 

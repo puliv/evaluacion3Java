@@ -9,6 +9,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import javax.swing.JLabel;
 import javax.swing.table.DefaultTableModel;
 import model.GestionProductos;
 
@@ -351,31 +352,58 @@ public class Form extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    //funcion para mostrar dialogo
+    private void mostrarDialog(String txt){
+        //mostrando dialog para avisar que hay error
+        jDialog1.setTitle("ERROR");
+        jDialog1.setSize(270, 80);
+        jDialog1.setLayout(null); // Layout nulo para posicionar manualmente
+        JLabel label = new JLabel(txt);
+        label.setBounds(5, 5, 250, 30); // Establecer posición y tamaño 
+        // Agregar componentes al JDialog
+        jDialog1.add(label);
+        // Hacer visible el JDialog
+        jDialog1.setLocationRelativeTo(null); // Centrar en pantalla
+        jDialog1.setModal(true); // Bloquea la ventana principal hasta cerrar el JDialog
+        jDialog1.setVisible(true);                
+    }
+    
     //Boton para agregar item a la lista
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
         String marca = marcaZap.getText();
         String modelo = modeloZap.getText();
-        double talla = Double.parseDouble(tallaZap.getText()); //conviertiendo string a double
-        double precio = Double.parseDouble(precioZap.getText());
-        
-        //instanciando un producto
+        String precioTxt = precioZap.getText();
+        String tallaTxt = tallaZap.getText();
+
+        //verificando que no haya ningun input vacio
+        if (marca.isEmpty() || modelo.isEmpty() || precioTxt.isEmpty() || tallaTxt.isEmpty()) {
+            mostrarDialog("Todos los campos son obligatorios");
+            return;
+        }
+
+        int precio;
+        int talla;
+
+        try {
+            precio = Integer.parseInt(precioTxt);
+            talla = Integer.parseInt(tallaTxt);
+        } catch (NumberFormatException e) {
+            mostrarDialog("Talla y precio deben ser valores numéricos");
+            return;
+        }
+
         Productos producto = new Productos(marca, modelo, talla, precio);
         gestionProductos.agregarProducto(producto);
         
-        
-        //limpiar textos del formulario
         marcaZap.setText("");
-        metodoPago.setText("");
         modeloZap.setText("");
-        nombreCliente.setText("");
         precioZap.setText("");
         tallaZap.setText("");
-        
+
         if(gestionProductos.obtenerTamanio() > 0){
             btnDetalle.setVisible(true);
             btnDetalleActionPerformed(evt); //si ya hay items en lista se muestran altiro
-        }
-          
+        }     
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void marcaZapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_marcaZapActionPerformed
@@ -400,12 +428,7 @@ public class Form extends javax.swing.JFrame {
         
         tblDetalle.setModel(modelo);
         gestionProductos.listarProductos();
-//        //actualizar la tabla 
-//        scpCursos.revalidate();
-//        scpCursos.repaint();
-//        scpCursos.setVisible(true);
         tblDetalle.setVisible(true);
-//        txtSigla.setEnabled(true);
     }//GEN-LAST:event_btnDetalleActionPerformed
 
     private void btnAgregarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarClienteActionPerformed
@@ -435,31 +458,41 @@ public class Form extends javax.swing.JFrame {
         //y usar los datos para editarlos
         String marcaDetalle = itemSeleccionado.getMarca();
         String modeloDetalle = itemSeleccionado.getModelo();
-        double tallaDetalle = itemSeleccionado.getTalla();
-        double precioDetalle = itemSeleccionado.getPrecio();
+        int tallaDetalle = itemSeleccionado.getTalla();
+        int precioDetalle = itemSeleccionado.getPrecio();
        
         //mostrando datos en inputs
         marcaZap.setText(marcaDetalle);
         modeloZap.setText(modeloDetalle);
-        tallaZap.setText( Double.toString(tallaDetalle));
-        precioZap.setText( Double.toString(precioDetalle)); //conviertiendo double a string
+        tallaZap.setText( Integer.toString(tallaDetalle));
+        precioZap.setText( Integer.toString(precioDetalle)); //conviertiendo int a string
 
-        //condicion para que ingrese dato numerico
-//            int talla = 0;
-//            try {
-//                talla = Integer.parseInt(tallaZap.getText());
-//            } catch (NumberFormatException e) {
-//                System.out.println("el dato debe ser numerico");
-//                return;
-//            }
+        //condicion 
     }//GEN-LAST:event_btnEditarActionPerformed
     
     //funcion para guardar datos editados
     private void btnGuardarEdicionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarEdicionActionPerformed
         String marcaEdit = marcaZap.getText();
         String modeloEdit = modeloZap.getText();
-        double tallaEdit = Double.parseDouble(tallaZap.getText()); //conviertiendo string a double
-        double precioEdit = Double.parseDouble(precioZap.getText());
+        String precio = precioZap.getText();
+        String talla = tallaZap.getText();
+        
+        //verificando que no haya ningun input vacio
+        if (marcaEdit.isEmpty() || modeloEdit.isEmpty() || talla.isEmpty() || precio.isEmpty()) {
+            mostrarDialog("Todos los campos son obligatorios");
+            return;
+        }
+
+        int precioEdit;
+        int tallaEdit;
+
+        try {
+            precioEdit = Integer.parseInt(precio);
+            tallaEdit = Integer.parseInt(talla);
+        } catch (NumberFormatException e) {
+            mostrarDialog("Talla y precio deben ser valores numéricos");
+            return;
+        }
 
         Productos prodModificado = new Productos(marcaEdit, modeloEdit, tallaEdit, precioEdit);
         gestionProductos.modificarProducto(filaSeleccionada, prodModificado);
@@ -468,7 +501,7 @@ public class Form extends javax.swing.JFrame {
         tblDetalle.setValueAt(marcaEdit, filaSeleccionada, 0);
         tblDetalle.setValueAt(modeloEdit, filaSeleccionada, 1);
         tblDetalle.setValueAt(tallaEdit, filaSeleccionada, 2);            
-        tblDetalle.setValueAt(precioEdit, filaSeleccionada, 3);
+        tblDetalle.setValueAt("$" + precioEdit, filaSeleccionada, 3);
         //limpiar formulario
         marcaZap.setText("");
         modeloZap.setText("");
